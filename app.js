@@ -10,7 +10,7 @@ const commentsRouter = require('./routes/comments.js')
 sequelize //서버 실행 시 MySQL과 연결
   .sync({ force: false }) // 서버 실행 시 테이블 재생성할 건지?
   .then(() => {
-      console.log("데이터베이스 연결 성공!");
+      console.log("데이터베이스 연결 성공!"); 
   })
   .catch((err) => {
       console.error(err);

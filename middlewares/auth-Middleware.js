@@ -4,7 +4,6 @@ const {secretKey} = require('../config/secretkey.js')
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log(req.headers)
   const [authType, authToken] = (authorization || "").split(" ");
        //token     bearer
   if (!authToken || authType !== "Bearer") {
@@ -15,8 +14,8 @@ module.exports = (req, res, next) => {
   }
 
   try {
-    const { userId } = jwt.verify(authToken, secretKey);
-    User.findByPk(userId).then((user) => {
+    const { id } = jwt.verify(authToken, secretKey);
+    User.findByPk(id).then((user) => {
       res.locals.user = user; 
       next();
     }); 

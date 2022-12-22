@@ -22,7 +22,7 @@ router.post('/comments/:postId', authMiddleware, async(req, res) => {
     const User = res.locals.user
     const post = await Post.findOne({where: {id: postId}})
     
-    if(!post) {
+     if(!post) {
         return res.status(400).json({message: '해당하는 게시글이 없습니다.'})
     }
     if(!comment) {
@@ -50,7 +50,7 @@ router.put('/comments/:commentId', authMiddleware, async(req,res) => {
         return res.status(404).json({message:'수정 권한이 없습니다.'})
     }
 })
-
+ 
 // 댓글 삭제 ---------------------------------------------------------------------------------------
 router.delete('/comments/:commentId', authMiddleware, async(req, res) => {
     const {commentId} = req.params

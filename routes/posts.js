@@ -16,7 +16,6 @@ router.get('/posts', async(req, res) => {
 router.post('/posts', authMiddleware, async(req, res) => {
     const {title, content} = req.body
     const User = res.locals.user
-    console.log(User)
 
     await Post.create({title, content, user_id: User.id}) 
     res.status(201).json({message: "게시글 작성 완료"})
@@ -28,7 +27,7 @@ router.get('/posts/:postId', async(req, res)=> {
     const {postId} = req.params
     const post = await Post.findOne({ where: {id: postId}})
 
-    if (post > 0) {
+    if (post) {
         res.status(200).json({data: post})
     } else {
         res.status(404).json({message:"해당하는 게시글이 없어요"})
@@ -36,13 +35,13 @@ router.get('/posts/:postId', async(req, res)=> {
 })
 
 // 게시글 수정 ------------------------------------------------------------------------------
-router.put('/post/:postId', authMiddleware, async(req, res) => {
+router.put('/posts/:postId', authMiddleware, async(req, res) => {
     const {postId} = req.params
     const {title, content} = req.body
     const User = res.locals.user
     const post = await Post.findOne({where: {id:postId}})
     
-    if (post.id === User.id) {
+    if (post && post.user_id === User.id) {
         await Post.update({title, content}, {where: {id:postId}})
         res.status(200).json({message:'게시글이 수정되었습니다.'})
     } else {
@@ -51,12 +50,12 @@ router.put('/post/:postId', authMiddleware, async(req, res) => {
 })
 
 // 게시글 삭제 -------------------------------------------------------------------------------
-router.delete('/post/:postId', authMiddleware, async(req,res) => {
+router.delete('/posts/:postId', authMiddleware, async(req,res) => {
     const {postId} = req.params
     const User = res.locals.user
     const post = await Post.findOne({where: {id:postId}})
 
-    if (post.id === User.id) {
+    if (post && post.user_id === User.id) {
         await Post.destroy({where: {id:postId}})
         res.status(200).json({message:'게시글이 삭제되었습니다.'})
     } else {
