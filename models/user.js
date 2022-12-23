@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       models.User.hasMany(models.Comment, {foreignKey: "user_id", sourceKey: "id",});
       models.User.hasMany(models.Post, {foreignKey: "user_id", sourceKey: "id",}); 
+      models.User.hasMany(models.Like, { foreignKey: "user_id" });
     }
   }
   User.init({

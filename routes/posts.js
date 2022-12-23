@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Post } = require("../models");
+const { Post, Like } = require("../models");
 
 const authMiddleware = require('../middlewares/auth-Middleware.js');
 
@@ -14,10 +14,10 @@ router.get('/posts', async(req, res) => {
 
 // 게시글 작성 ------------------------------------------------------------------------------------
 router.post('/posts', authMiddleware, async(req, res) => {
-    const {title, content} = req.body
+    const {title, content, likes} = req.body
     const User = res.locals.user
 
-    await Post.create({title, content, user_id: User.id}) 
+    await Post.create({title, content, user_id: User.id, likes}) 
     res.status(201).json({message: "게시글 작성 완료"})
 
 })
@@ -63,7 +63,44 @@ router.delete('/posts/:postId', authMiddleware, async(req,res) => {
     }
 })
 
+//좋아요 -----------------------------------------------------------------------
+router.post('/posts/:postId/like', authMiddleware,async(req, res, next) =>{
+    try{
+        const {postId} = req.params
+        const User = res.locals.user
+        const post = await Post.findOne(({where: {id:postId}}))
+        const like = await Like.findOne({where: {post_id:postId, user_id:User.id}})
 
+        if(!post) {
+            return res.status(400).json({message:"게시글이 존재하지 않습니다."})
+        }
+        if(!like) {
+            await Like.create({post_id : postId, user_id: User.id})
+            .then(Post.increment({likes: 1}, {where: {id: postId}}))
+            res.json({message:'좋아요 완료'})
+        }else {
+            like.destroy().then(Post.decrement({ likes: 1 }, { where: { id: postId } }))
+            res.json({message:'좋아요 취소'})
+        } 
+    }catch(error){
+        console.error(error)
+        next(error)
+    }
+})
 
+//좋아요 검색 ------------------------------------------------------------------------
+router.get('/posts/list/like', authMiddleware, async(req,res) => {
+    const User = res.locals.user
+
+    const likepost = await Like.findAll({
+        where: {user_id: User.id},
+        include: [{model: Post, attributes:['title', 'content', 'likes'],}],
+    })
+    if(likepost.length > 0){
+        return res.status(200).json({data: likepost})
+    } else{
+        return res.status(404).json({message: "좋아요한 게시글이 없어요"})
+    }
+})
 
 module.exports = router;
