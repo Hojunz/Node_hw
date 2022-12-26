@@ -1,4 +1,5 @@
-![스크린샷(414)](https://user-images.githubusercontent.com/118158825/209251019-24183d78-037e-46f8-939c-869b2ede8410.png)
+![스크린샷(424)](https://user-images.githubusercontent.com/118158825/209520305-5ca35732-5919-438e-b56a-7c93bea48216.png)
+
 
 
 1. 회원 가입 API
