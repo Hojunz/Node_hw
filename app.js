@@ -22,9 +22,10 @@ app.use('/api', [usersRouter, postsRouter, commentsRouter])
 
 
 console.log('연습중입니다.');
+console.log("진짜 수정중입니다.");
 
 app.use("/api", express.urlencoded({ extended: false }), router);
 
-app.listen(5000, () => {
+app.listen(10000, () => {
   console.log("서버가 요청을 받을 준비가 됐어요");
 });
