@@ -21,6 +21,8 @@ app.use(express.json())
 app.use('/api', [usersRouter, postsRouter, commentsRouter]) 
 
 
+console.log('연습중입니다.');
+
 app.use("/api", express.urlencoded({ extended: false }), router);
 
 app.listen(5000, () => {
